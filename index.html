@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fluxograma de Saúde</title>
+  <link rel="stylesheet" href="styles.css">
+  <script>
+    function verificarSintoma(event) {
+      event.preventDefault(); // Impede o envio padrão do formulário
+      const sintoma = document.getElementById('symptom').value.toLowerCase();
+      // Palavras-chave para cada nível de atenção
+      const primaria = [
+        "resfriado", "dor de garganta", "diarreia leve", "cefaleia tensional", "gripe",
+        "infecção urinária simples", "febre baixa", "hipertensão leve", "diabetes tipo 2 controlado",
+        "alergias respiratórias leves", "pequenas feridas", "cortes", "dor muscular", "verminoses",
+        "vacinação", "planejamento familiar", "ansiedade leve", "conjuntivite", "gastrite leve",
+        "otite externa", "insônia leve"
+      ];
+      const secundaria = [
+        "apendicite", "pneumonia", "depressão moderada", "endometriose", "diabetes tipo 2 descontrolado",
+        "hipertensão severa", "insuficiência cardíaca leve", "cálculo renal", "hérnia de disco",
+        "asma grave", "lúpus leve", "distúrbios de tireoide", "refluxo crônico", "catarata",
+        "toc moderado", "obesidade mórbida", "doença de crohn", "transtornos alimentares",
+        "insuficiência venosa crônica", "dst avançada"
+      ];
+      const terciaria = [
+        "transplante de órgãos", "câncer", "avc agudo", "infarto", "insuficiência renal",
+        "lesões graves", "cirurgias cardíacas", "transtornos psiquiátricos graves", "sepse",
+        "grandes queimaduras", "dpoc grave", "hemorragias internas", "lesão medular",
+        "meningite bacteriana", "neuropatias severas", "aids avançada", "cirurgias ortopédicas complexas",
+        "cirrose descompensada", "cuidados paliativos"
+      ];
+      // Verificar a categoria do sintoma
+      if (primaria.some(item => sintoma.includes(item))) {
+        window.location.href = "UBS.html"; // URL da UBS
+      } else if (secundaria.some(item => sintoma.includes(item))) {
+        window.location.href = "UPA.html"; // URL da UPA
+      } else if (terciaria.some(item => sintoma.includes(item))) {
+        window.location.href = "Hospital.html"; // URL do Hospital
+      } else {
+        alert("Sintoma não reconhecido. Por favor, tente novamente ou consulte um profissional de saúde.");
+      }
+    }
+  </script>
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <h1>Fluxograma de Saúde</h1>
+    </div>
+  </header>
+  <main class="container">
+    <section class="form-section">
+      <h2>Informe seus sintomas</h2>
+      <form id="healthForm" onsubmit="verificarSintoma(event)">
+        <label for="symptom">Digite seu sintoma ou doença:</label>
+        <!-- Adicionado o preenchimento automático -->
+        <input list="symptomList" id="symptom" name="symptom" placeholder="Ex: Febre baixa, asma, diabetes tipo 2" required>
+        <datalist id="symptomList">
+          <!-- Opções de doenças e sintomas -->
+          <option value="Resfriado comum">
+          <option value="Dor de garganta">
+          <option value="Diarreia leve">
+          <option value="Cefaleia tensional">
+          <option value="Gripe">
+          <option value="Infecção urinária simples">
+          <option value="Febre baixa">
+          <option value="Pressão alta inicial (hipertensão leve)">
+          <option value="Diabetes tipo 2 controlado">
+          <option value="Alergias respiratórias leves">
+          <option value="Pequenas feridas ou cortes">
+          <option value="Dor muscular após esforço físico">
+          <option value="Verminoses">
+          <option value="Vacinação de rotina">
+          <option value="Planejamento familiar">
+          <option value="Ansiedade leve">
+          <option value="Conjuntivite simples">
+          <option value="Sintomas leves de gastrite">
+          <option value="Otite externa">
+          <option value="Insônia leve">
+          <option value="Apendicite">
+          <option value="Pneumonia comunitária moderada">
+          <option value="Depressão moderada">
+          <option value="Endometriose">
+          <option value="Diabetes tipo 2 descontrolado">
+          <option value="Hipertensão arterial severa">
+          <option value="Insuficiência cardíaca leve/moderada">
+          <option value="Cálculo renal">
+          <option value="Hérnia de disco">
+          <option value="Asma moderada/grave">
+          <option value="Doenças autoimunes (lúpus leve)">
+          <option value="Transplante de órgãos">
+          <option value="Câncer com radioterapia ou quimioterapia">
+          <option value="AVC em fase aguda">
+          <option value="Infarto agudo do miocárdio">
+        </datalist>
+        <button type="submit">Verificar</button>
+      </form>
+    </section>
+    <section class="info-section">
+      <h2>Sobre os Serviços</h2>
+      <p>Os níveis de atenção à saúde no Brasil são organizados para atender diferentes complexidades e necessidades:</p>
+      <ul>
+        <li><strong>Atenção Primária:</strong> Foco em prevenção, promoção da saúde e tratamento de condições comuns.</li>
+        <li><strong>Atenção Secundária:</strong> Serviços especializados para condições que requerem diagnóstico e tratamentos mais complexos.</li>
+        <li><strong>Atenção Terciária:</strong> Cuidados altamente especializados para doenças graves ou complexas.</li>
+      </ul>
+    </section>
+  </main>
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2024 Verificador de Saúde. Todos os direitos reservados.</p>
+    </div>
+  </footer>
+</body>
+</html>
