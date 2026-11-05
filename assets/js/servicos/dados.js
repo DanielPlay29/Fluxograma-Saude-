@@ -98,7 +98,16 @@ const SELECT_ATENDIMENTO = `*,
   autor:perfis!atendimentos_created_by_fkey(nome)`;
 
 /** Achata o registro para os cálculos de indicadores. */
+export const ROTULO_INTENCAO = { UBS: "UBS", UPA: "UPA", HOSPITAL: "hospital" };
 export function achatar(a) {
+  if (a.canal === "site") {
+    // Consulta pública: a "origem" é para onde o cidadão iria sem a orientação
+    return {
+      ...a,
+      origem_tipo: a.intencao_inicial ?? null,
+      origem_nome: a.intencao_inicial ? `Site · iria à ${ROTULO_INTENCAO[a.intencao_inicial]}` : "Site · não sabia aonde ir",
+    };
+  }
   return { ...a, origem_tipo: a.origem?.tipo, origem_nome: a.origem?.nome };
 }
 
@@ -111,7 +120,7 @@ export async function salvarAtendimento(registro) {
   return data;
 }
 
-export async function listarAtendimentos({ inicio, fim, unidadeId, tipoAtendimento, destino, resultado, limite = 5000 } = {}) {
+export async function listarAtendimentos({ inicio, fim, unidadeId, tipoAtendimento, destino, resultado, canal, limite = 5000 } = {}) {
   let q = sb.from("atendimentos").select(SELECT_ATENDIMENTO).order("created_at", { ascending: false }).limit(limite);
   if (inicio) q = q.gte("created_at", inicio.toISOString());
   if (fim) q = q.lt("created_at", fim.toISOString());
@@ -119,6 +128,7 @@ export async function listarAtendimentos({ inicio, fim, unidadeId, tipoAtendimen
   if (tipoAtendimento) q = q.eq("tipo_atendimento", tipoAtendimento);
   if (destino) q = q.eq("destino_escolhido", destino);
   if (resultado) q = q.eq("resultado", resultado);
+  if (canal) q = q.eq("canal", canal);
   const { data, error } = await q;
   falha(error, "Não foi possível carregar os atendimentos.");
   return data.map(achatar);

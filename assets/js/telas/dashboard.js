@@ -1,7 +1,7 @@
 import { criarFiltros } from "../ui/filtros.js";
 import { carregarPainel } from "../servicos/painel.js";
 import { icone } from "../ui/icones.js";
-import { esc, fmtNum, fmtPct, fmtMoeda, aviso, carregando, vazio, ROTULO_TIPO_CURTO } from "../ui/comum.js";
+import { esc, fmtNum, fmtPct, fmtMoeda, fmtHoras, aviso, carregando, vazio, ROTULO_TIPO_CURTO } from "../ui/comum.js";
 import { grafico, destruirGraficos, CORES, eixos } from "../ui/graficos.js";
 import { TIPOS } from "../core/indicadores.js";
 
@@ -62,6 +62,10 @@ function desenhar(painel, d, filtros) {
       ${kpi({ rotulo: "Encaminhamentos para UPA", valor: fmtNum(ind.porDestino.UPA), ic: "UPA", cor: "azul" })}
       ${kpi({ rotulo: "Encaminhamentos para hospitais", valor: fmtNum(ind.porDestino.HOSPITAL), nota: outros ? `+ ${fmtNum(outros)} para serviço de emergência` : "", ic: "HOSPITAL" })}
       ${kpi({ rotulo: "Economia potencial estimada", valor: fmtMoeda(ind.economia.potencial), nota: "Estimativa com custos configurados — não é economia comprovada", ic: "economia", destaque: true })}
+    </div>
+    <div class="grade grade-2">
+      ${kpi({ rotulo: "Consultas feitas pelo site (cidadãos)", valor: fmtNum(ind.porCanal.site), nota: `${fmtNum(ind.porCanal.profissional)} registradas por profissionais`, ic: "paciente", cor: "azul" })}
+      ${kpi({ rotulo: "Tempo de espera potencialmente evitado", valor: ind.tempo.esperasFaltando.length === 4 ? "—" : fmtHoras(ind.tempo.minutosEvitados), nota: ind.tempo.esperasFaltando.length === 4 ? 'Configure os tempos médios de espera em <a href="#/configuracoes">Configurações</a>' : `Estimativa em ${fmtNum(ind.tempo.casos)} encaminhamento(s), com tempos médios configurados`, ic: "historico", cor: "positivo" })}
     </div>
 
     <div class="grade grade-2">

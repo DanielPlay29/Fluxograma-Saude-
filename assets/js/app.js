@@ -96,12 +96,12 @@ async function navegar() {
 
 async function iniciar() {
   if (!configurado) {
-    location.replace("index.html");
+    location.replace("entrar.html");
     return;
   }
   const { data } = await sb.auth.getSession();
   if (!data?.session) {
-    location.replace("index.html");
+    location.replace("entrar.html");
     return;
   }
   try {
@@ -111,7 +111,7 @@ async function iniciar() {
   }
   if (!ctx.perfil?.ativo) {
     await sb.auth.signOut();
-    location.replace("index.html?motivo=inativo");
+    location.replace("entrar.html?motivo=inativo");
     return;
   }
   try {
@@ -122,7 +122,7 @@ async function iniciar() {
   ctx.recarregarUnidades = async () => { ctx.unidades = await listarUnidades(); };
   montarEstrutura();
   sb.auth.onAuthStateChange((evento) => {
-    if (evento === "SIGNED_OUT") location.replace("index.html");
+    if (evento === "SIGNED_OUT") location.replace("entrar.html");
   });
   window.addEventListener("hashchange", navegar);
   navegar();

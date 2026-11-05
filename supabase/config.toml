@@ -5,3 +5,7 @@ verify_jwt = true
 
 [functions.gerenciar-usuarios]
 verify_jwt = true
+
+# Chamada por visitantes sem login (página inicial)
+[functions.interpretar-publico]
+verify_jwt = false

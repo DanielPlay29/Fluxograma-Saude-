@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Área restrita · FluxoSaúde</title>
+  <meta name="robots" content="noindex">
+  <meta name="description" content="Plataforma de gestão e otimização do fluxo de pacientes na rede pública de saúde.">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/app.css">
+  <script type="module" src="assets/js/login.js"></script>
+</head>
+<body>
+  <div class="acesso">
+    <section class="acesso-arte" aria-hidden="false">
+      <a class="marca" href="index.html" id="marca"></a>
+      <div>
+        <h2>O paciente certo, no lugar certo, na hora certa.</h2>
+        <p>Organize o fluxo da rede pública de saúde, interprete relatos com apoio de inteligência artificial e acompanhe os resultados da otimização dos encaminhamentos.</p>
+        <div class="acesso-fluxo">
+          <span>Paciente</span><span>Avaliação inicial</span><span>Interpretação</span><span>Protocolo</span><span>Destino adequado</span>
+        </div>
+      </div>
+      <p class="acesso-rodape">Ferramenta de apoio à decisão. Não substitui a avaliação profissional, o diagnóstico médico ou a classificação oficial de risco.</p>
+    </section>
+
+    <section class="acesso-form">
+      <div class="acesso-caixa" id="caixa">
+        <div id="mensagem"></div>
+
+        <form id="form-login" novalidate>
+          <div style="display:flex;flex-direction:column;gap:16px">
+            <div>
+              <h1>Área restrita</h1>
+              <p style="color:var(--texto-2);margin-top:4px">Acesso exclusivo da gestão. Entre com o e-mail e a senha cadastrados.</p>
+            </div>
+            <label class="campo"><span>E-mail</span>
+              <input class="entrada" type="email" name="email" autocomplete="username" required placeholder="nome@saude.gov.br">
+            </label>
+            <label class="campo"><span>Senha</span>
+              <input class="entrada" type="password" name="senha" autocomplete="current-password" required minlength="6">
+            </label>
+            <div style="display:flex;justify-content:flex-end">
+              <button type="button" class="link-botao" id="ir-recuperar">Esqueci minha senha</button>
+            </div>
+            <button class="btn btn-primario btn-bloco" type="submit" id="btn-entrar">Entrar</button>
+          </div>
+        </form>
+
+        <form id="form-recuperar" class="oculto" novalidate>
+          <div style="display:flex;flex-direction:column;gap:16px">
+            <div>
+              <h1>Recuperar senha</h1>
+              <p style="color:var(--texto-2);margin-top:4px">Informe seu e-mail. Se ele estiver cadastrado, você receberá um link para criar uma nova senha.</p>
+            </div>
+            <label class="campo"><span>E-mail</span>
+              <input class="entrada" type="email" name="email" autocomplete="username" required>
+            </label>
+            <button class="btn btn-primario btn-bloco" type="submit">Enviar link de recuperação</button>
+            <button type="button" class="link-botao" id="voltar-login">← Voltar para o login</button>
+          </div>
+        </form>
+
+        <div class="separador">Não é da gestão?</div>
+        <a class="btn btn-secundario btn-bloco" href="index.html">Voltar para a consulta de sintomas</a>
+      </div>
+    </section>
+  </div>
+</body>
+</html>

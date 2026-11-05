@@ -1,0 +1,79 @@
+/* Página pública (cidadão) — usa os mesmos tokens de app.css */
+.pagina-publica { background: var(--fundo); }
+.pub-largura { width: min(980px, 100% - 32px); margin: 0 auto; }
+.pub-topo { background: var(--verde-900); }
+.pub-topo .pub-largura { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; }
+.pub-topo .marca { padding: 0; }
+.pub-restrita { color: #bfe0d2; font-weight: 700; font-size: 13px; text-decoration: none; padding: 7px 12px; border: 1px solid rgba(255, 255, 255, .18); border-radius: 9px; }
+.pub-restrita:hover { color: #fff; border-color: rgba(255, 255, 255, .4); }
+
+.pub-hero {
+  color: #fff; padding: 36px 0 88px;
+  background: radial-gradient(900px 400px at 85% -20%, rgba(47, 182, 122, .35), transparent 60%), linear-gradient(170deg, var(--verde-900), var(--verde-800));
+}
+.pub-hero h1 { font-size: clamp(28px, 4.4vw, 42px); letter-spacing: -0.03em; max-width: 640px; }
+.pub-hero p { color: #cbe7db; max-width: 640px; margin-top: 12px; font-size: 16px; }
+.pub-hero strong { color: #fff; }
+
+.pub-principal { margin-top: -64px; display: flex; flex-direction: column; gap: 18px; padding-bottom: 48px; }
+.pub-192 {
+  align-self: flex-end; background: var(--vermelho); color: #fff; text-decoration: none; font-weight: 700; font-size: 13.5px;
+  padding: 8px 14px; border-radius: 999px; box-shadow: var(--sombra);
+}
+.pub-192 strong { font-size: 15px; }
+.pub-form { display: flex; flex-direction: column; gap: 16px; padding: 24px; }
+.pub-rotulo { font-size: 17px !important; color: var(--texto) !important; font-weight: 800 !important; }
+.pub-form textarea.entrada { font-size: 16px; min-height: 120px; }
+.pub-exemplos { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 13px; color: var(--texto-3); }
+.pub-exemplos button { border: 1px solid var(--borda-forte); background: var(--superficie); border-radius: 999px; padding: 5px 11px; font-size: 13px; cursor: pointer; color: var(--texto-2); }
+.pub-exemplos button:hover { border-color: var(--verde-600); color: var(--verde-700); }
+.pub-intencao { border: 0; padding: 0; margin: 0; }
+.pub-intencao legend { font-size: 12.5px; font-weight: 700; color: var(--texto-2); margin-bottom: 6px; padding: 0; }
+.pub-intencao .segmentado { display: flex; flex-wrap: wrap; }
+.pub-intencao label { flex: 1; position: relative; }
+.pub-intencao input { position: absolute; opacity: 0; }
+.pub-intencao span { display: block; text-align: center; padding: 8px 10px; border-radius: 8px; font-weight: 700; font-size: 13px; color: var(--texto-2); cursor: pointer; white-space: nowrap; }
+.pub-intencao input:checked + span { background: var(--superficie); color: var(--verde-700); box-shadow: 0 1px 3px rgba(0, 0, 0, .08); }
+.pub-intencao input:focus-visible + span { outline: 2px solid var(--verde-claro); }
+.pub-enviar { padding: 14px; font-size: 16px; }
+
+#resultado { display: flex; flex-direction: column; gap: 16px; outline: none; }
+.pub-resultado { border-radius: 18px; padding: 24px; color: #fff; box-shadow: var(--sombra); animation: entrar .3s ease; }
+.pub-resultado.pub-UBS { background: linear-gradient(135deg, var(--verde-800), var(--verde-600)); }
+.pub-resultado.pub-UPA { background: linear-gradient(135deg, #1f4f7d, var(--azul)); }
+.pub-resultado.pub-HOSPITAL { background: linear-gradient(135deg, #47377f, #7a62bd); }
+.pub-resultado.pub-EMERGENCIA { background: linear-gradient(135deg, #8f1f1f, var(--vermelho)); }
+.pub-resultado-cab { display: flex; gap: 14px; align-items: center; }
+.pub-resultado-icone { width: 56px; height: 56px; flex: none; border-radius: 16px; background: rgba(255, 255, 255, .16); display: grid; place-items: center; }
+.pub-resultado-icone svg { width: 30px; height: 30px; }
+.pub-resultado-rotulo { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; opacity: .8; }
+.pub-resultado h2 { font-size: clamp(22px, 3.4vw, 30px); letter-spacing: -0.02em; }
+.pub-resultado-texto { font-size: 16px; margin-top: 14px; max-width: 720px; }
+.pub-depois { display: flex; gap: 8px; align-items: flex-start; margin-top: 14px; font-size: 14px; opacity: .92; }
+.pub-depois svg { width: 18px; height: 18px; flex: none; margin-top: 2px; }
+.pub-btn-192 { margin-top: 16px; background: #fff; color: var(--vermelho); font-size: 18px; padding: 14px 22px; }
+.pub-locais { display: flex; flex-direction: column; gap: 12px; }
+.pub-local { display: flex; flex-direction: column; gap: 4px; padding-bottom: 12px; border-bottom: 1px solid var(--borda); }
+.pub-local:last-child { border-bottom: 0; padding-bottom: 0; }
+.pub-local span { color: var(--texto-2); font-size: 13.5px; }
+.pub-local-acoes { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+
+.pub-info { margin-top: 18px; display: flex; flex-direction: column; gap: 14px; }
+.pub-info h2 { font-size: 20px; }
+.pub-info .card { display: flex; flex-direction: column; gap: 8px; align-items: flex-start; }
+.pub-info .card h3 { font-size: 16px; }
+.pub-info .card p { color: var(--texto-2); font-size: 14px; }
+.pub-aviso { color: var(--texto-3); font-size: 13px; text-align: center; }
+.pub-rodape { background: var(--verde-950); color: #9cc5b4; font-size: 13px; }
+.pub-rodape .pub-largura { display: flex; flex-wrap: wrap; gap: 8px 20px; justify-content: space-between; padding: 22px 0; }
+.pub-rodape a { color: #d9ebe3; font-weight: 700; }
+
+@media (max-width: 900px) {
+  .pub-principal .grade-2, .pub-info .grade-3 { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  .pub-hero { padding: 26px 0 80px; }
+  .pub-form { padding: 16px; }
+  .pub-192 { align-self: stretch; text-align: center; }
+  .pub-intencao span { padding: 8px 6px; font-size: 12.5px; }
+}

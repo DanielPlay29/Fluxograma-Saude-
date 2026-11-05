@@ -6,7 +6,8 @@ Plataforma web para organizar o encaminhamento de pacientes entre **UBS**, **UPA
 
 ## Funcionalidades
 
-- **Login real** (Supabase Auth) com três perfis: administrador, gestor hospitalar e profissional de saúde, e recuperação de senha.
+- **Página inicial pública (sem login)**: o cidadão descreve o que sente, com as próprias palavras, e recebe a orientação (UBS, UPA, hospital ou emergência) com endereços e telefones. Cada consulta é registrada, sem identificação, para os indicadores da gestão.
+- **Área restrita** com login real (Supabase Auth) com três perfis: administrador, gestor hospitalar e profissional de saúde, e recuperação de senha.
 - **Novo atendimento**: relato livre → sinais de alerta imediatos → interpretação por IA (Gemini) → recomendação pelo protocolo → decisão do profissional (com justificativa obrigatória em caso de divergência).
 - **Sinais de alerta determinísticos** (dor torácica, dificuldade respiratória, sinais de AVC, desmaio, convulsão, sangramento, trauma grave, anafilaxia, risco de autoagressão, intoxicação), que não dependem da IA.
 - **Fluxograma interativo**: Paciente → Avaliação inicial → Interpretação → Protocolo → Destino, com rastreio de cada atendimento.
@@ -14,7 +15,7 @@ Plataforma web para organizar o encaminhamento de pacientes entre **UBS**, **UPA
 - **Otimização da rede** e **Economia gerada**, separando economia **potencial estimada** de economia **comprovada**.
 - **Relatórios mensais** exportáveis em PDF, Excel e CSV.
 - **Usuários**, **Configurações** (custos, unidades, regras, linha de base) e **auditoria** completa.
-- Preserva o site original: as **60 regras de encaminhamento**, o verificador público (`consulta.html`) e as páginas das unidades.
+- Preserva o site original: as **60 regras de encaminhamento** e as páginas das unidades.
 
 ## Tecnologia
 
@@ -31,10 +32,11 @@ Veja o passo a passo completo em **[GUIA_DE_CONFIGURACAO.md](GUIA_DE_CONFIGURACA
 ## Estrutura
 
 ```
-index.html               Login
+index.html               Página inicial pública (consulta de sintomas)
+entrar.html              Login da área restrita
 app.html                 Sistema (menu lateral + telas)
 redefinir-senha.html     Nova senha (link do e-mail)
-consulta.html            Orientação ao cidadão (verificador original)
+consulta.html            Endereço antigo (redireciona para a página inicial)
 UBS.html, UPA.html, Hospital.html   Páginas públicas das unidades
 assets/js/core/          Regras de encaminhamento e indicadores (testados)
 assets/js/servicos/      Acesso ao Supabase

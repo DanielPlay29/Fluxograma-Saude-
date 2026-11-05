@@ -63,7 +63,7 @@ export async function entrar(email, senha) {
 
 export async function sair() {
   await sb.auth.signOut();
-  location.replace("index.html");
+  location.replace("entrar.html");
 }
 
 export async function recuperarSenha(email) {

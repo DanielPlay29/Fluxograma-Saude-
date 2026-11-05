@@ -14,6 +14,11 @@ const inteiro = new Intl.NumberFormat("pt-BR");
 export const fmtMoeda = (v) => moeda.format(Number(v ?? 0));
 export const fmtNum = (v) => inteiro.format(Number(v ?? 0));
 export const fmtPct = (v, casas = 1) => (v === null || v === undefined || Number.isNaN(v) ? "—" : `${Number(v).toLocaleString("pt-BR", { maximumFractionDigits: casas, minimumFractionDigits: 0 })}%`);
+export const fmtHoras = (min) => {
+  const m = Number(min ?? 0);
+  if (m < 60) return `${fmtNum(Math.round(m))} min`;
+  return `${(m / 60).toLocaleString("pt-BR", { maximumFractionDigits: 1 })} h`;
+};
 export const fmtData = (d) => (d ? new Date(d).toLocaleDateString("pt-BR") : "—");
 export const fmtDataHora = (d) => (d ? new Date(d).toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" }) : "—");
 export const fmtCompetencia = (d) => {

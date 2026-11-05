@@ -1,8 +1,11 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { validar } from "../supabase/functions/_shared/validacao.ts";
+import { validar as validarCompartilhado } from "../supabase/functions/_shared/validacao.ts";
+import { validar as validarPublico } from "../supabase/functions/interpretar-publico/index.ts";
 
-test("mantém itens comprovados pelo relato e monta o resumo técnico", () => {
+for (const [nome, validar] of [["função dos profissionais", validarCompartilhado], ["função pública", validarPublico]] as const) {
+
+test(`${nome}: ` + "mantém itens comprovados pelo relato e monta o resumo técnico", () => {
   const relato = "Paciente com dor nas costas desde ontem, tá com dificuldade de respirar.";
   const { interpretacao, descartados } = validar(relato, {
     sintoma_principal: { termo_tecnico: "Dor nas costas", trecho_original: "dor nas costas" },
@@ -19,7 +22,7 @@ test("mantém itens comprovados pelo relato e monta o resumo técnico", () => {
   );
 });
 
-test("descarta sintomas, início e intensidade que o relato não contém (anti-invenção)", () => {
+test(`${nome}: ` + "descarta sintomas, início e intensidade que o relato não contém (anti-invenção)", () => {
   const { interpretacao, descartados } = validar("Minha barriga tá doendo", {
     sintoma_principal: { termo_tecnico: "Dor abdominal", trecho_original: "barriga tá doendo" },
     sintomas_associados: [{ termo_tecnico: "Febre", trecho_original: "febre de 39 graus" }],
@@ -35,10 +38,11 @@ test("descarta sintomas, início e intensidade que o relato não contém (anti-i
   assert.doesNotMatch(interpretacao.resumo_tecnico, /febre|3 dias|8/i);
 });
 
-test("trecho parcial de palavra não comprova (ex.: 'ar' dentro de 'barriga')", () => {
+test(`${nome}: ` + "trecho parcial de palavra não comprova (ex.: 'ar' dentro de 'barriga')", () => {
   const { interpretacao } = validar("barriga doendo", {
     sintoma_principal: { termo_tecnico: "Dispneia", trecho_original: "ar" },
     sintomas_associados: [], negados: [], informacoes_pendentes: [],
   });
   assert.equal(interpretacao.sintoma_principal, null);
 });
+}

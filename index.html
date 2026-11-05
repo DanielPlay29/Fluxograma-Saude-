@@ -3,70 +3,93 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Entrar · FluxoSaúde</title>
-  <meta name="description" content="Plataforma de gestão e otimização do fluxo de pacientes na rede pública de saúde.">
+  <title>FluxoSaúde · Onde devo ser atendido?</title>
+  <meta name="description" content="Descreva o que está sentindo e descubra se deve procurar a UBS (posto de saúde), a UPA, o hospital ou o serviço de emergência.">
   <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/app.css">
-  <script type="module" src="assets/js/login.js"></script>
+  <link rel="stylesheet" href="assets/css/publico.css">
+  <script type="module" src="assets/js/publico.js"></script>
 </head>
-<body>
-  <div class="acesso">
-    <section class="acesso-arte" aria-hidden="false">
+<body class="pagina-publica">
+  <header class="pub-topo">
+    <div class="pub-largura">
       <a class="marca" href="index.html" id="marca"></a>
-      <div>
-        <h2>O paciente certo, no lugar certo, na hora certa.</h2>
-        <p>Organize o fluxo da rede pública de saúde, interprete relatos com apoio de inteligência artificial e acompanhe os resultados da otimização dos encaminhamentos.</p>
-        <div class="acesso-fluxo">
-          <span>Paciente</span><span>Avaliação inicial</span><span>Interpretação</span><span>Protocolo</span><span>Destino adequado</span>
-        </div>
+      <a class="pub-restrita" href="entrar.html">Área restrita</a>
+    </div>
+  </header>
+
+  <section class="pub-hero">
+    <div class="pub-largura">
+      <h1>Onde devo buscar atendimento?</h1>
+      <p>Conte o que você está sentindo, do seu jeito. Vamos indicar se o melhor lugar é o <strong>posto de saúde (UBS)</strong>, a <strong>UPA</strong>, o <strong>hospital</strong> ou o <strong>serviço de emergência</strong>.</p>
+    </div>
+  </section>
+
+  <main class="pub-largura pub-principal">
+    <a class="pub-192" href="tel:192">Emergência? Ligue <strong>192</strong> (SAMU)</a>
+
+    <form class="card pub-form" id="form" novalidate>
+      <label class="campo">
+        <span class="pub-rotulo">O que você está sentindo?</span>
+        <textarea class="entrada" name="relato" id="relato" rows="4" maxlength="1000" required
+          placeholder="Ex.: minha garganta tá doendo e estou com febre desde ontem"></textarea>
+        <small><span id="contador">0</span>/1000 · Não escreva seu nome, CPF ou Cartão SUS.</small>
+      </label>
+      <div class="pub-exemplos" aria-label="Exemplos">
+        <span>Exemplos:</span>
+        <button type="button" data-exemplo="Estou gripado e com dor de garganta">gripe e dor de garganta</button>
+        <button type="button" data-exemplo="Minha barriga tá doendo e estou vomitando">dor de barriga e vômito</button>
+        <button type="button" data-exemplo="Preciso tomar vacina">vacina</button>
       </div>
-      <p class="acesso-rodape">Ferramenta de apoio à decisão. Não substitui a avaliação profissional, o diagnóstico médico ou a classificação oficial de risco.</p>
-    </section>
+      <div id="alertas" aria-live="assertive"></div>
 
-    <section class="acesso-form">
-      <div class="acesso-caixa" id="caixa">
-        <div id="mensagem"></div>
-
-        <form id="form-login" novalidate>
-          <div style="display:flex;flex-direction:column;gap:16px">
-            <div>
-              <h1>Acesse sua conta</h1>
-              <p style="color:var(--texto-2);margin-top:4px">Entre com o e-mail e a senha cadastrados pela administração.</p>
-            </div>
-            <label class="campo"><span>E-mail</span>
-              <input class="entrada" type="email" name="email" autocomplete="username" required placeholder="nome@saude.gov.br">
-            </label>
-            <label class="campo"><span>Senha</span>
-              <input class="entrada" type="password" name="senha" autocomplete="current-password" required minlength="6">
-            </label>
-            <div style="display:flex;justify-content:flex-end">
-              <button type="button" class="link-botao" id="ir-recuperar">Esqueci minha senha</button>
-            </div>
-            <button class="btn btn-primario btn-bloco" type="submit" id="btn-entrar">Entrar</button>
+      <div class="grade-form">
+        <label class="campo"><span>Idade (opcional)</span>
+          <select class="entrada" name="faixa">
+            <option value="">Prefiro não informar</option>
+            <option value="0-11">0 a 11 anos</option><option value="12-17">12 a 17 anos</option>
+            <option value="18-39">18 a 39 anos</option><option value="40-59">40 a 59 anos</option>
+            <option value="60+">60 anos ou mais</option>
+          </select></label>
+        <fieldset class="campo pub-intencao">
+          <legend>Se não usasse este site, aonde você iria? (opcional)</legend>
+          <div class="segmentado" role="radiogroup">
+            <label><input type="radio" name="intencao" value="UBS"><span>Posto (UBS)</span></label>
+            <label><input type="radio" name="intencao" value="UPA"><span>UPA</span></label>
+            <label><input type="radio" name="intencao" value="HOSPITAL"><span>Hospital</span></label>
+            <label><input type="radio" name="intencao" value="" checked><span>Não sei</span></label>
           </div>
-        </form>
-
-        <form id="form-recuperar" class="oculto" novalidate>
-          <div style="display:flex;flex-direction:column;gap:16px">
-            <div>
-              <h1>Recuperar senha</h1>
-              <p style="color:var(--texto-2);margin-top:4px">Informe seu e-mail. Se ele estiver cadastrado, você receberá um link para criar uma nova senha.</p>
-            </div>
-            <label class="campo"><span>E-mail</span>
-              <input class="entrada" type="email" name="email" autocomplete="username" required>
-            </label>
-            <button class="btn btn-primario btn-bloco" type="submit">Enviar link de recuperação</button>
-            <button type="button" class="link-botao" id="voltar-login">← Voltar para o login</button>
-          </div>
-        </form>
-
-        <div class="separador">Atendimento ao cidadão</div>
-        <a class="btn btn-secundario btn-bloco" href="consulta.html">Não sei aonde ir: orientação de atendimento</a>
+        </fieldset>
       </div>
+
+      <button class="btn btn-primario pub-enviar" type="submit" id="btn-enviar">Ver onde ser atendido</button>
+    </form>
+
+    <section id="resultado" class="oculto" aria-live="polite" tabindex="-1"></section>
+
+    <section class="pub-info">
+      <h2>Como a rede de saúde se organiza</h2>
+      <div class="grade grade-3">
+        <div class="card"><span class="tag tag-UBS">UBS / Posto de saúde</span><h3>Atenção Primária</h3>
+          <p>Prevenção, vacinas, consultas de rotina, doenças crônicas controladas e problemas leves. É a porta de entrada do SUS.</p></div>
+        <div class="card"><span class="tag tag-UPA">UPA</span><h3>Urgência</h3>
+          <p>Febre alta, dores intensas, crises respiratórias, fraturas e situações que precisam de atendimento rápido, mas não de internação.</p></div>
+        <div class="card"><span class="tag tag-HOSPITAL">Hospital</span><h3>Alta complexidade</h3>
+          <p>Casos graves, cirurgias, internação, terapia intensiva e tratamentos especializados.</p></div>
+      </div>
+      <p class="pub-aviso">Esta orientação não substitui a avaliação de um profissional de saúde. Em caso de dúvida ou piora, procure atendimento. Em emergência, ligue 192.</p>
     </section>
-  </div>
+  </main>
+
+  <footer class="pub-rodape">
+    <div class="pub-largura">
+      <span>FluxoSaúde · Rede pública de saúde</span>
+      <span>As consultas são registradas sem identificação pessoal, apenas para melhorar o atendimento da rede.</span>
+      <a href="entrar.html">Área restrita</a>
+    </div>
+  </footer>
 </body>
 </html>

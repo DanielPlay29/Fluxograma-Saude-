@@ -131,7 +131,7 @@ export async function render(el, ctx) {
         <a class="btn btn-secundario btn-sm" href="UBS.html" target="_blank" rel="noopener">${icone("UBS")} UBS</a>
         <a class="btn btn-secundario btn-sm" href="UPA.html" target="_blank" rel="noopener">${icone("UPA")} UPA</a>
         <a class="btn btn-secundario btn-sm" href="Hospital.html" target="_blank" rel="noopener">${icone("HOSPITAL")} Hospital</a>
-        <a class="btn btn-secundario btn-sm" href="consulta.html" target="_blank" rel="noopener">${icone("paciente")} Orientação ao cidadão</a></div>`;
+        <a class="btn btn-secundario btn-sm" href="index.html" target="_blank" rel="noopener">${icone("paciente")} Página pública (cidadão)</a></div>`;
   } catch (e) {
     $("#regras", el).innerHTML = aviso("erro", e.message);
   }

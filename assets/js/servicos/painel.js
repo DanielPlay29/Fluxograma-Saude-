@@ -17,7 +17,7 @@ export function descreverPeriodo(periodo, inicio, fim) {
 export async function carregarPainel(filtros, { comGestao = true } = {}) {
   const { inicio, fim } = intervaloDoPeriodo(filtros.periodo, dataDeTexto(filtros.referencia));
   const [atendimentos, config, linhaBase, comprovada] = await Promise.all([
-    listarAtendimentos({ inicio, fim, unidadeId: filtros.unidadeId || null, tipoAtendimento: filtros.tipoAtendimento || null }),
+    listarAtendimentos({ inicio, fim, unidadeId: filtros.unidadeId || null, tipoAtendimento: filtros.tipoAtendimento || null, canal: filtros.canal || null }),
     obterConfig(),
     comGestao ? listarLinhaBase() : Promise.resolve([]),
     comGestao ? listarEconomiaComprovada({ inicio, fim }) : Promise.resolve([]),

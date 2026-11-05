@@ -105,6 +105,25 @@ const ouvintes = [];
 export function createClient() {
   return {
     from: (t) => new Consulta(t),
+    async rpc(nome, a) {
+      const db = ler();
+      if (nome === "unidades_publicas") return { data: db.unidades.filter((u) => u.ativa).map(({ id, ...u }) => u), error: null };
+      if (nome === "regras_publicas") return { data: db.regras_encaminhamento.filter((r) => r.ativa), error: null };
+      if (nome === "registrar_consulta_publica") {
+        const esperado = { primaria: "UBS", secundaria: "UPA", terciaria: "HOSPITAL", emergencia: "EMERGENCIA", indefinido: "UBS" }[a.p_nivel];
+        if (a.p_destino !== esperado) return { data: null, error: { message: "destino_incoerente" } };
+        const r = {
+          id: uid(), created_at: agora(), canal: "site", created_by: null, unidade_origem_id: null, protocolo: ++db._seq,
+          faixa_etaria: a.p_faixa_etaria ?? "nao_informada", tipo_atendimento: "orientacao", relato: a.p_relato,
+          interpretacao: a.p_interpretacao, interpretacao_fonte: a.p_fonte, alertas: a.p_alertas, nivel_recomendado: a.p_nivel,
+          destino_recomendado: esperado, criterios: a.p_criterios, destino_escolhido: esperado, intencao_inicial: a.p_intencao,
+          resultado: "pendente", atualizado_em: agora(),
+        };
+        db.atendimentos.push(r); gravar(db);
+        return { data: r.protocolo, error: null };
+      }
+      return { data: null, error: { message: "função desconhecida" } };
+    },
     auth: {
       async getSession() { const db = ler(); return { data: { session: db._sessao ? { user: { id: db._sessao } } : null } }; },
       async signInWithPassword({ email, password }) {
@@ -123,6 +142,10 @@ export function createClient() {
       async invoke(nome, { body }) {
         const db = ler();
         const falha = (codigo) => ({ data: null, error: { context: { json: async () => ({ erro: codigo }) } } });
+        if (nome === "interpretar-publico") {
+          if (db._modoIA === "desligada") return falha("ia_nao_configurada");
+          return { data: { modelo: "gemini-teste", interpretacao: { sintoma_principal: { termo_tecnico: "Dor abdominal", trecho_original: "barriga" }, sintomas_associados: [], negados: [], inicio: null, intensidade: null, informacoes_pendentes: ["Quando começou?", "Intensidade da dor (0 a 10)"], resumo_tecnico: "Paciente relata dor abdominal." }, descartados: 0 }, error: null };
+        }
         if (nome === "interpretar-sintomas") {
           if (db._modoIA === "desligada") return falha("ia_nao_configurada");
           const r = String(body.relato);

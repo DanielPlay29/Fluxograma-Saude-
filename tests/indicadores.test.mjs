@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
+  tempoDoAtendimento,
   calcularIndicadores, economiaDoAtendimento, intervaloDoPeriodo, antesDepois, mesesNoIntervalo, baldes,
 } from "../assets/js/core/indicadores.js";
 
@@ -107,4 +108,24 @@ test("antes × depois usa somente a linha de base informada", () => {
   assert.equal(r.antes[r.tipos.indexOf("UPA")], 900);
   assert.equal(r.antes[r.tipos.indexOf("UBS")], 200);
   assert.equal(r.depois[r.tipos.indexOf("UBS")], 600);
+});
+
+test("tempo de espera evitado usa só os tempos configurados", () => {
+  const cfg = { ...config, espera_ubs_min: 30, espera_upa_min: 150, espera_hospital_min: null };
+  assert.equal(tempoDoAtendimento(a("UPA", "UBS"), cfg), 120);
+  assert.equal(tempoDoAtendimento(a("HOSPITAL", "UBS"), cfg), null);
+  assert.equal(tempoDoAtendimento(a("UPA", "UBS", { resultado: "reencaminhado" }), cfg), 0);
+  const r = calcularIndicadores([a("UPA", "UBS"), a("UPA", "UBS"), a("HOSPITAL", "UBS")], cfg);
+  assert.equal(r.tempo.minutosEvitados, 240);
+  assert.equal(r.tempo.casosSemTempo, 1);
+});
+
+test("consultas do site: origem é a intenção inicial do cidadão", () => {
+  const site = { created_at: "2026-10-10T10:00:00", canal: "site", origem_tipo: "UPA", destino_escolhido: "UBS", destino_recomendado: "UBS", resultado: "pendente" };
+  const semIntencao = { ...site, origem_tipo: null };
+  const r = calcularIndicadores([site, semIntencao], config);
+  assert.equal(r.porCanal.site, 2);
+  assert.equal(r.menorComplexidade, 1);
+  assert.equal(r.economia.potencial, 115);
+  assert.equal(r.chegadasAltaComplexidade, 1);
 });

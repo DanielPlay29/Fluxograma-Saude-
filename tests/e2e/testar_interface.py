@@ -51,7 +51,7 @@ def nova_pagina(ctx, erros, nome):
 
 
 def entrar(p, email, senha="senha12345"):
-    p.goto(f"{BASE}/index.html")
+    p.goto(f"{BASE}/entrar.html")
     p.fill("#form-login [name=email]", email)
     p.fill("#form-login [name=senha]", senha)
     p.click("#btn-entrar")
@@ -59,7 +59,7 @@ def entrar(p, email, senha="senha12345"):
 
 def sair(p):
     p.click("#btn-sair")
-    p.wait_for_url("**/index.html")
+    p.wait_for_url("**/entrar.html")
 
 
 def itens_menu(p):
@@ -76,8 +76,39 @@ def main():
         preparar(ctx, erros)
         p = nova_pagina(ctx, erros, "desktop")
 
-        # ---------- Login ----------
+        # ---------- Página pública (sem login) ----------
         p.goto(f"{BASE}/index.html")
+        p.screenshot(path=f"{CAPTURAS}/00-publica.png", full_page=True)
+        assert p.locator(".nav").count() == 0
+        p.fill("#relato", "Estou gripado e com dor de garganta")
+        p.check("[name=intencao][value=UPA]", force=True)
+        p.click("#btn-enviar")
+        expect(p.locator("#resultado")).to_contain_text("Procure uma UBS")
+        expect(p.locator("#resultado")).to_contain_text("UBS Central")
+        expect(p.locator("#resultado .tag-neutra")).to_contain_text("Interpretação automática")
+        p.screenshot(path=f"{CAPTURAS}/00b-publica-resultado.png", full_page=True)
+        passo("cidadão consulta sem login: gripe → UBS, com endereços das unidades")
+        p.click("#nova")
+        p.fill("#relato", "minha mãe desmaiou e está com falta de ar")
+        expect(p.locator(".alerta-critico")).to_be_visible()
+        p.click("#btn-enviar")
+        expect(p.locator(".pub-resultado.pub-EMERGENCIA")).to_contain_text("emergência")
+        expect(p.locator(".pub-btn-192")).to_have_attribute("href", "tel:192")
+        p.screenshot(path=f"{CAPTURAS}/00c-publica-emergencia.png", full_page=True)
+        passo("sinal de alerta na página pública → emergência e botão 192")
+        p.evaluate("""() => { const d = JSON.parse(localStorage.__mock_db__); d._modoIA = 'ligada'; localStorage.__mock_db__ = JSON.stringify(d); }""")
+        p.click("#nova")
+        p.fill("#relato", "minha barriga ta doendo desde cedo")
+        p.click("#btn-enviar")
+        expect(p.locator("#resultado .tag-ia")).to_contain_text("IA")
+        expect(p.locator("#resultado")).to_contain_text("Procure uma UBS")
+        n = p.evaluate("JSON.parse(localStorage.__mock_db__).atendimentos.filter(a => a.canal === 'site').length")
+        assert n == 3, n
+        p.evaluate("""() => { const d = JSON.parse(localStorage.__mock_db__); d._modoIA = 'desligada'; localStorage.__mock_db__ = JSON.stringify(d); }""")
+        passo("consultas públicas registradas para o painel (3)")
+
+        # ---------- Login ----------
+        p.goto(f"{BASE}/entrar.html")
         p.screenshot(path=f"{CAPTURAS}/01-login.png")
         entrar(p, "prof@teste.local", "errada")
         expect(p.locator("#mensagem")).to_contain_text("E-mail ou senha incorretos")
@@ -86,7 +117,7 @@ def main():
         expect(p.locator("#mensagem")).to_contain_text("não foi liberado")
         passo("usuário inativo é bloqueado")
         p.goto(f"{BASE}/app.html#/dashboard")
-        p.wait_for_url("**/index.html")
+        p.wait_for_url("**/entrar.html")
         passo("rota protegida sem sessão volta ao login")
 
         # ---------- Profissional ----------
@@ -116,8 +147,8 @@ def main():
         p.fill("[name=justificativa]", "Paciente já em observação na própria UPA, estável.")
         p.screenshot(path=f"{CAPTURAS}/03-atendimento.png", full_page=True)
         p.click("#btn-salvar")
-        expect(p.locator("#sucesso")).to_contain_text("Atendimento nº 1 registrado")
-        passo("divergência exige justificativa; atendimento nº 1 salvo")
+        expect(p.locator("#sucesso")).to_contain_text("Atendimento nº 4 registrado")
+        passo("divergência exige justificativa; atendimento do profissional salvo")
 
         p.evaluate("""() => { const d = JSON.parse(localStorage.__mock_db__); d._modoIA = 'ligada'; localStorage.__mock_db__ = JSON.stringify(d); }""")
         p.click("#btn-novo")
@@ -135,7 +166,7 @@ def main():
         expect(p.locator("#btn-salvar")).to_be_enabled()
         p.select_option("[name=resultado]", "atendido_no_destino")
         p.click("#btn-salvar")
-        expect(p.locator("#sucesso")).to_contain_text("nº 2")
+        expect(p.locator("#sucesso")).to_contain_text("nº 5")
         passo("interpretação por IA integrada à recomendação (UPA → UBS) e salva")
 
         p.click("text=Ver no fluxograma")
@@ -161,7 +192,8 @@ def main():
         entrar(p, "gestor@teste.local")
         p.wait_for_url("**#/dashboard")
         assert "Novo atendimento" not in itens_menu(p) and "Usuários" not in itens_menu(p)
-        expect(p.locator(".kpi").first).to_contain_text("2")
+        expect(p.locator(".kpi").first).to_contain_text("5")
+        expect(p.locator("#painel")).to_contain_text("Consultas feitas pelo site")
         p.wait_for_function("window.__graficos.length >= 4")
         p.screenshot(path=f"{CAPTURAS}/06-dashboard.png", full_page=True)
         graficos = p.evaluate("window.__graficos")
@@ -238,18 +270,15 @@ def main():
         m.screenshot(path=f"{CAPTURAS}/13-menu-celular.png")
         passo("layout responsivo no celular, sem rolagem horizontal")
 
-        # ---------- Orientação ao cidadão (página original) ----------
+        # ---------- Endereço antigo redireciona ----------
         c = nova_pagina(ctx, erros, "consulta")
         c.goto(f"{BASE}/consulta.html")
-        c.fill("#symptom", "Gripe")
-        c.click("text=Verificar")
-        c.wait_for_url("**/UBS.html")
-        c.goto(f"{BASE}/consulta.html")
-        c.fill("#symptom", "estou com falta de ar")
-        c.click("text=Verificar")
-        expect(c.locator(".emergencia")).to_contain_text("192")
-        c.screenshot(path=f"{CAPTURAS}/14-consulta.png", full_page=True)
-        passo("página pública original mantida (Gripe → UBS) e com alerta de emergência")
+        c.wait_for_url("**/index.html")
+        m.goto(f"{BASE}/index.html")
+        m.screenshot(path=f"{CAPTURAS}/14-publica-celular.png", full_page=True)
+        largura = m.evaluate("document.documentElement.scrollWidth")
+        assert largura <= 390, f"rolagem horizontal na página pública: {largura}px"
+        passo("consulta.html antiga leva à nova página inicial; página pública ok no celular")
 
         nav.close()
     srv.shutdown()

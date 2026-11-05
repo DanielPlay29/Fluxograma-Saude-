@@ -37,7 +37,7 @@ async function rede(box, ctx) {
   const c = await obterConfig();
   const campoCusto = (nome, rotulo) => `<label class="campo"><span>${rotulo}</span><input class="entrada" type="number" min="0" step="0.01" name="${nome}" value="${c[nome] ?? ""}" placeholder="Não configurado"></label>`;
   box.innerHTML = `<form class="card" id="form-rede">
-    <div class="card-cab"><div><h3>Rede e custos estimados</h3><p>Valores médios por atendimento usados no cálculo da economia potencial.</p></div></div>
+    <div class="card-cab"><div><h3>Rede, custos e tempos de espera</h3><p>Valores médios usados no cálculo da economia e do tempo de espera evitado.</p></div></div>
     ${aviso("atencao", "Estes valores são estimativas", "<p>Use custos médios apurados pela Secretaria de Saúde. Eles não representam custos oficiais do SUS e o sistema sempre os apresenta como estimativa. Deixe em branco o que não souber — esses casos ficam fora do cálculo.</p>")}
     <div class="grade-form" style="margin-top:16px">
       <label class="campo" style="grid-column:1/-1"><span>Nome da rede</span><input class="entrada" name="nome_rede" value="${esc(c.nome_rede ?? "")}" maxlength="120"></label>
@@ -46,6 +46,10 @@ async function rede(box, ctx) {
       ${campoCusto("custo_hospital", "Custo médio – Hospital (R$)")}
       ${campoCusto("custo_emergencia", "Custo médio – Emergência (R$)")}
       ${campoCusto("custo_operacional_mensal", "Custo operacional mensal da plataforma (R$)")}
+      <label class="campo"><span>Espera média – UBS (min)</span><input class="entrada" type="number" min="0" step="1" name="espera_ubs_min" value="${c.espera_ubs_min ?? ""}" placeholder="Não configurado"></label>
+      <label class="campo"><span>Espera média – UPA (min)</span><input class="entrada" type="number" min="0" step="1" name="espera_upa_min" value="${c.espera_upa_min ?? ""}" placeholder="Não configurado"></label>
+      <label class="campo"><span>Espera média – Hospital (min)</span><input class="entrada" type="number" min="0" step="1" name="espera_hospital_min" value="${c.espera_hospital_min ?? ""}" placeholder="Não configurado"></label>
+      <label class="campo"><span>Espera média – Emergência (min)</span><input class="entrada" type="number" min="0" step="1" name="espera_emergencia_min" value="${c.espera_emergencia_min ?? ""}" placeholder="Não configurado"></label>
       <label class="campo"><span>Data de implantação</span><input class="entrada" type="date" name="data_implantacao" value="${esc(c.data_implantacao ?? "")}"></label>
     </div>
     <p class="kpi-nota" style="margin-top:12px">Última alteração: ${esc(fmtDataHora(c.updated_at))}</p>
@@ -55,7 +59,7 @@ async function rede(box, ctx) {
     e.preventDefault();
     const f = e.target;
     const num = (n) => (f[n].value === "" ? null : Number(f[n].value));
-    for (const n of ["custo_ubs", "custo_upa", "custo_hospital", "custo_emergencia", "custo_operacional_mensal"]) {
+    for (const n of ["custo_ubs", "custo_upa", "custo_hospital", "custo_emergencia", "custo_operacional_mensal", "espera_ubs_min", "espera_upa_min", "espera_hospital_min", "espera_emergencia_min"]) {
       if (num(n) !== null && (Number.isNaN(num(n)) || num(n) < 0)) return toast("Os custos devem ser números positivos.", "erro");
     }
     try {
@@ -63,6 +67,8 @@ async function rede(box, ctx) {
         nome_rede: f.nome_rede.value.trim() || "Rede Municipal de Saúde",
         custo_ubs: num("custo_ubs"), custo_upa: num("custo_upa"), custo_hospital: num("custo_hospital"),
         custo_emergencia: num("custo_emergencia"), custo_operacional_mensal: num("custo_operacional_mensal") ?? 0,
+        espera_ubs_min: num("espera_ubs_min"), espera_upa_min: num("espera_upa_min"),
+        espera_hospital_min: num("espera_hospital_min"), espera_emergencia_min: num("espera_emergencia_min"),
         data_implantacao: f.data_implantacao.value || null,
       }, ctx.perfil.id);
       toast("Configurações salvas.");

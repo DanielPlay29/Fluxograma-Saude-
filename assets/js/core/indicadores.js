@@ -31,6 +31,32 @@ export function custoDe(tipo, config) {
   return v === null || v === undefined || v === "" ? null : Number(v);
 }
 
+/** Tempo médio de espera configurado (minutos) ou null. */
+export function esperaDe(tipo, config) {
+  const mapa = {
+    UBS: config?.espera_ubs_min,
+    UPA: config?.espera_upa_min,
+    HOSPITAL: config?.espera_hospital_min,
+    EMERGENCIA: config?.espera_emergencia_min,
+  };
+  const v = mapa[tipo];
+  return v === null || v === undefined || v === "" ? null : Number(v);
+}
+
+/**
+ * Tempo de espera potencialmente evitado (min) por UM atendimento:
+ * mesma regra da economia — só quando o paciente foi direcionado a uma
+ * unidade de menor complexidade e o encaminhamento não se mostrou inadequado.
+ */
+export function tempoDoAtendimento(a, config) {
+  const o = a.origem_tipo, d = a.destino_escolhido;
+  if (!o || !d || !(COMPLEXIDADE[d] < COMPLEXIDADE[o])) return 0;
+  if (a.resultado === "reencaminhado") return 0;
+  const eo = esperaDe(o, config), ed = esperaDe(d, config);
+  if (eo === null || ed === null) return null;
+  return Math.max(0, eo - ed);
+}
+
 export function custosFaltando(config) {
   return TIPOS.filter((t) => custoDe(t, config) === null);
 }
@@ -125,6 +151,8 @@ export function calcularIndicadores(atendimentos, config, opcoes = {}) {
     concordancia: { base: 0, concordantes: 0, pct: null },
     desfecho: { conhecidos: 0, adequados: 0, pct: null, pendentes: 0 },
     economia: { potencial: 0, comDesfechoConfirmado: 0, casosSemCusto: 0, casos: 0 },
+    tempo: { minutosEvitados: 0, casos: 0, casosSemTempo: 0 },
+    porCanal: { site: 0, profissional: 0 },
     serie: [],
     porMes: [],
   };
@@ -144,7 +172,7 @@ export function calcularIndicadores(atendimentos, config, opcoes = {}) {
     const nome = a.origem_nome ?? "—";
     r.porUnidade[nome] = (r.porUnidade[nome] ?? 0) + 1;
 
-    if (a.destino_escolhido !== a.origem_tipo) r.redirecionados++;
+    if (a.origem_tipo && a.destino_escolhido !== a.origem_tipo) r.redirecionados++;
     const alta = COMPLEXIDADE[a.origem_tipo] > 1;
     const menor = COMPLEXIDADE[a.destino_escolhido] < COMPLEXIDADE[a.origem_tipo];
     if (alta) r.chegadasAltaComplexidade++;
@@ -168,6 +196,11 @@ export function calcularIndicadores(atendimentos, config, opcoes = {}) {
       r.economia.casos++;
       if (adequado) r.economia.comDesfechoConfirmado += eco;
     }
+
+    const min = tempoDoAtendimento(a, config);
+    if (min === null) r.tempo.casosSemTempo++;
+    else if (min > 0) { r.tempo.minutosEvitados += min; r.tempo.casos++; }
+    if (a.canal === "site") r.porCanal.site++; else r.porCanal.profissional++;
 
     const k = chaveDoBalde(gran, a.created_at);
     if (!serieMapa.has(k)) serieMapa.set(k, { chave: k, rotulo: k, total: 0, chegadasAlta: 0, menorComplexidade: 0, potencial: 0, adequados: 0, conhecidos: 0 });
@@ -205,6 +238,7 @@ export function calcularIndicadores(atendimentos, config, opcoes = {}) {
   r.economia.custoOperacional = custoOp;
   r.economia.liquidaPotencial = r.economia.potencial - custoOp;
   r.economia.custosFaltando = custosFaltando(config);
+  r.tempo.esperasFaltando = TIPOS.filter((t) => esperaDe(t, config) === null);
   return r;
 }
 
