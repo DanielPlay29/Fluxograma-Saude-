@@ -33,11 +33,17 @@
 
     <form class="card pub-form" id="form" novalidate>
       <label class="campo">
-        <span class="pub-rotulo">O que você está sentindo?</span>
+        <span class="pub-rotulo">O que você está sentindo? Escreva ou fale.</span>
         <textarea class="entrada" name="relato" id="relato" rows="4" maxlength="1000" required
           placeholder="Ex.: minha garganta tá doendo e estou com febre desde ontem"></textarea>
         <small><span id="contador">0</span>/1000 · Não escreva seu nome, CPF ou Cartão SUS.</small>
       </label>
+      <div class="pub-voz oculto" id="voz">
+        <button type="button" class="btn pub-btn-falar" id="btn-falar" aria-pressed="false">
+          <span class="pub-falar-icone" id="falar-icone"></span><span id="falar-texto">Prefere falar? Toque aqui e diga o que sente</span>
+        </button>
+        <span class="kpi-nota" id="voz-status" aria-live="polite"></span>
+      </div>
       <div class="pub-exemplos" aria-label="Exemplos">
         <span>Exemplos:</span>
         <button type="button" data-exemplo="Estou gripado e com dor de garganta">gripe e dor de garganta</button>

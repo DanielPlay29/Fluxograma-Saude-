@@ -191,6 +191,8 @@ python3 tests/e2e/testar_interface.py
 
 ## 9. Limites conhecidos
 
+- **Falar o sintoma** usa o reconhecimento de voz do próprio navegador: funciona no Chrome (Android e computador), Edge e Safari (iPhone). No Firefox o botão não aparece e a pessoa digita normalmente. Nesses navegadores, o áudio é processado pelo serviço de voz do fabricante (Google ou Apple); o site recebe só o texto.
+
 - As regras de encaminhamento são as do fluxograma original (palavras-chave por nível de atenção) e **não foram validadas clinicamente**. Antes de uso real, devem ser revisadas pela equipe técnica e alinhadas a protocolos oficiais (ex.: Protocolo de Manchester / classificação de risco do município). A tela **Configurações → Regras** permite isso.
 - Os custos por atendimento são exemplos ilustrativos; os indicadores financeiros só têm valor com custos apurados pela Secretaria.
 - O plano gratuito do Supabase pausa projetos sem uso por 7 dias (basta reativar no painel) e tem limites de armazenamento.
