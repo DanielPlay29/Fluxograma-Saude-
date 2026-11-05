@@ -1,0 +1,8 @@
+tests/e2e/capturas/
+supabase/.temp/
+supabase/.branches/
+.env
+.env.*
+node_modules/
+__pycache__/
+.DS_Store
