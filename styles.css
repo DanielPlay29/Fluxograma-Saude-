@@ -141,4 +141,18 @@ datalist option {
 datalist option:hover {
   background-color: #00796b;
   color: white;
+}/* Alertas de emergência (orientação ao cidadão) */
+.emergencia {
+  margin-top: 15px;
+  padding: 14px 16px;
+  border: 2px solid #c62828;
+  background: #ffebee;
+  color: #8e1c1c;
+  border-radius: 8px;
+}
+.emergencia strong { display: block; margin-bottom: 4px; }
+.aviso-emergencia {
+  margin-top: 12px;
+  font-size: 0.95rem;
+  color: #8e1c1c;
 }

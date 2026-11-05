@@ -1,0 +1,7 @@
+project_id = "fluxo-saude"
+
+[functions.interpretar-sintomas]
+verify_jwt = true
+
+[functions.gerenciar-usuarios]
+verify_jwt = true

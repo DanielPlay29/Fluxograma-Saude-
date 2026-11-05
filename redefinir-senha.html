@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <title>Nova senha · FluxoSaúde</title>
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/app.css">
+</head>
+<body>
+  <main class="acesso-form" style="min-height:100vh">
+    <div class="acesso-caixa">
+      <h1>Criar nova senha</h1>
+      <div id="mensagem"></div>
+      <form id="form" novalidate style="display:flex;flex-direction:column;gap:16px">
+        <label class="campo"><span>Nova senha</span>
+          <input class="entrada" type="password" name="senha" autocomplete="new-password" minlength="8" required>
+          <small>Mínimo de 8 caracteres.</small>
+        </label>
+        <label class="campo"><span>Confirme a nova senha</span>
+          <input class="entrada" type="password" name="confirmacao" autocomplete="new-password" minlength="8" required>
+        </label>
+        <button class="btn btn-primario btn-bloco" type="submit">Salvar nova senha</button>
+      </form>
+      <a class="link-botao" href="index.html">← Voltar para o login</a>
+    </div>
+  </main>
+  <script type="module">
+    import { sb, configurado } from "./assets/js/servicos/supabase.js";
+    import { definirNovaSenha } from "./assets/js/servicos/sessao.js";
+    import { aviso } from "./assets/js/ui/comum.js";
+    const msg = document.getElementById("mensagem");
+    const form = document.getElementById("form");
+    let liberado = false;
+    if (configurado) {
+      sb.auth.onAuthStateChange((evento) => { if (evento === "PASSWORD_RECOVERY" || evento === "SIGNED_IN") liberado = true; });
+      const { data } = await sb.auth.getSession();
+      liberado = liberado || Boolean(data?.session);
+    }
+    if (!liberado) {
+      msg.innerHTML = aviso("atencao", "Link inválido ou expirado", "<p>Solicite um novo link em “Esqueci minha senha”.</p>");
+      form.classList.add("oculto");
+    }
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const { senha, confirmacao } = form;
+      if (senha.value.length < 8) return (msg.innerHTML = aviso("erro", "A senha precisa ter pelo menos 8 caracteres."));
+      if (senha.value !== confirmacao.value) return (msg.innerHTML = aviso("erro", "As senhas não conferem."));
+      try {
+        await definirNovaSenha(senha.value);
+        form.classList.add("oculto");
+        msg.innerHTML = aviso("ok", "Senha alterada", '<p>Você já pode <a href="app.html">acessar o sistema</a>.</p>');
+      } catch (err) {
+        msg.innerHTML = aviso("erro", err.message);
+      }
+    });
+  </script>
+</body>
+</html>
