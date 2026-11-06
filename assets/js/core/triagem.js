@@ -215,7 +215,7 @@ export function detectarAlertas(texto) {
 // ---------------------------------------------------------------------
 const EXPRESSOES = [
   { termo: "Dor torácica", p: [/\b(dor|dores|aperto|pontada) (no|do|na) peito\b/, /\bpeito (doi|doendo|apertado)\b/] },
-  { termo: "Dificuldade respiratória", p: [/\bfalta de ar\b/, /\b(dificuldade|dificil) (de |pra |para )?respirar\b/, /\bnao (consigo|consegue) respirar\b/, /\bsem ar\b/, /\bcansaco (pra|para) respirar\b/] },
+  { termo: "Dificuldade respiratória", p: [/\bfalta de ar\b/, /\b(dificuldade|dificil) (de |pra |para )?respirar\b/, /\bnao (consigo|consegue) respirar\b/, /\bsem ar\b/, /\bcansaco (pra|para) respirar\b/, /\bdificuldade respiratoria\b/, /\bdispneia\b/, /\brespiracao (dificil|curta|ofegante)\b/] },
   { termo: "Cefaleia intensa", p: [/\bcabeca (ta |esta )?explodindo\b/, /\bdor de cabeca (muito )?(forte|intensa|insuportavel)\b/] },
   { termo: "Cefaleia", p: [/\bdor de cabeca\b/, /\bcabeca (doi|doendo|latejando)\b/, /\bdor na cabeca\b/, /\benxaqueca\b/] },
   { termo: "Dor nas costas", p: [/\bcostas (ta |esta )?(doi|doendo|dolorida)\b/, /\bdor (nas|na|das) costas\b/, /\bdor lombar\b/, /\blombar (doi|doendo)\b/] },
