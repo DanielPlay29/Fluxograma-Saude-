@@ -32,6 +32,16 @@
     <a class="pub-192" href="tel:192">Emergência? Ligue <strong>192</strong> (SAMU)</a>
 
     <form class="card pub-form" id="form" novalidate>
+      <div class="pub-regiao" id="regiao-barra">
+        <span class="pub-regiao-atual" id="regiao-atual"></span>
+        <button type="button" class="btn btn-fantasma btn-sm" id="btn-regiao" aria-expanded="false" aria-controls="regiao-editor">Alterar região</button>
+        <div class="pub-regiao-editor oculto" id="regiao-editor">
+          <label class="campo"><span>Em qual cidade você está?</span>
+            <input class="entrada" id="regiao-entrada" list="regiao-lista" autocomplete="address-level2" placeholder="Ex.: Uberaba - MG"></label>
+          <datalist id="regiao-lista"></datalist>
+          <button type="button" class="btn btn-primario btn-sm" id="regiao-salvar">Usar esta cidade</button>
+        </div>
+      </div>
       <label class="campo">
         <span class="pub-rotulo">O que você está sentindo? Escreva ou fale.</span>
         <textarea class="entrada" name="relato" id="relato" rows="4" maxlength="1000" required

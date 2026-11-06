@@ -15,8 +15,9 @@ Este guia leva o sistema do código até um endereço funcionando na internet, u
 1. Crie uma conta em <https://supabase.com> e clique em **New project**. Escolha a região **South America (São Paulo)** e anote a senha do banco.
 2. No menu do projeto, abra **SQL Editor → New query**.
 3. Copie todo o conteúdo de `supabase/migrations/20261105000000_plataforma.sql`, cole e clique em **Run**.
-4. Faça o mesmo com `supabase/seed.sql` (cadastra as unidades de Luís Eduardo Magalhães, os custos de exemplo e as 60 regras originais do fluxograma).
+4. Faça o mesmo com `supabase/seed.sql` (cadastra as unidades de Uberaba - MG, os custos de exemplo e as 60 regras originais do fluxograma).
 5. Por último, rode `supabase/migrations/20261105010000_consulta_publica.sql` (permite que a página inicial grave as consultas dos cidadãos sem login, e adiciona os tempos de espera).
+6. Rode `supabase/migrations/20261106000000_regiao_uberaba.sql` (deixa Uberaba - MG como região: desativa as unidades de exemplo da Bahia, cadastra hospital, UPAs e SAMU de Uberaba e marca quais hospitais têm pronto-socorro). A cidade padrão da página inicial fica em `assets/js/config.js` (`REGIAO_PADRAO`), e o visitante pode trocar a região no próprio site.
 
 > Confira endereços e telefones das unidades com a Secretaria de Saúde antes de usar em produção. Eles vieram das páginas antigas do site.
 
